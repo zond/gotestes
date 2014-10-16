@@ -7,7 +7,6 @@ import (
 	"go/parser"
 	"go/token"
 	"os"
-	"os/exec"
 	"regexp"
 	"strings"
 )
@@ -56,7 +55,7 @@ func (self *visitor) Visit(node ast.Node) (w ast.Visitor) {
 		if isTestFunc(fd) {
 			switch self.state {
 			case searching:
-				if fd.Name.Name == self.from {
+				if self.from == "" || fd.Name.Name == self.from {
 					self.state = running
 				}
 			case running:
@@ -102,9 +101,5 @@ func main() {
 		}
 	}
 
-	cmd := exec.Command("go", "test", "-v", fmt.Sprintf("-run=^%v$", strings.Join(v.tests, "|")))
-	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
-	if err := cmd.Run(); err != nil {
-		panic(err)
-	}
+	fmt.Printf("^%v$\n", strings.Join(v.tests, "|"))
 }
