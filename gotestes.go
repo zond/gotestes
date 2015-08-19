@@ -66,7 +66,7 @@ func (self *visitor) Visit(node ast.Node) (w ast.Visitor) {
 				self.state = done
 			}
 			if self.state == running || self.state == last {
-				self.tests = append(self.tests, fmt.Sprintf("(%v)", fd.Name.Name))
+				self.tests = append(self.tests, fmt.Sprintf("(^%v$)", fd.Name.Name))
 			}
 		}
 	}
@@ -101,5 +101,5 @@ func main() {
 		}
 	}
 
-	fmt.Printf("^%v$\n", strings.Join(v.tests, "|"))
+	fmt.Printf("%v\n", strings.Join(v.tests, "|"))
 }
